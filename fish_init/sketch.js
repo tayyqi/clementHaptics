@@ -308,7 +308,9 @@ function draw() {
     food.spawn();
     
     //remove food when overlap with fish body
-    if(food.x > fish.x-fish.size/2 && food.x < fish.x+fish.size/2 && food.y > fish.y-fish.size/4 && food.y < fish.y+fish.size/4){
+    //remove food when out of bounds
+    if(food.x > fish.x-fish.size/2 && food.x < fish.x+fish.size/2 && food.y > fish.y-fish.size/4 && food.y < fish.y+fish.size/4 ||
+      food.x>width || food.y > height){
       foodArr.splice(i,1);
     }
 
