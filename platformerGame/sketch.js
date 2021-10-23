@@ -1,10 +1,12 @@
-//Creative Coding Assignment 12: Sprite Animation
-
-/*Assignment Instructions
-Create an image sprite animation using p5.play. The animation must respond to keyboard and mouse interaction.
-*/
+//POC platformer game for clement Haptics
 
 //character assets from : https://bayat.itch.io/platform-game-assets/devlog/6987/character-animation-update
+
+let gui;
+//scene refers to full map w/o camera perspective
+let SCENE_W = 1920;
+let SCENE_H = 1024;
+let unit = SCENE_W/15;
 
 var blobSprite;
 var blob_run;
@@ -20,6 +22,11 @@ var coin_slant;
 var grassImg = [];
 
 var gravity = 0.5;
+
+//touchgui controls
+let cont_joystick;
+let cont_jump;
+
 
 function preload(){
   //load bg image
@@ -52,9 +59,33 @@ function preload(){
   coin_slant = loadImage('assets/Coin_slant.png');
 }
 
+
 function setup() {
-  // createCanvas(1920, 1024);
-  createCanvas(displayWidth, displayHeight);
+  // createCanvas(windowWidth, windowHeight);
+  createCanvas(SCENE_W, SCENE_H);
+  
+  gui = createGui();
+  
+  // Create Joystick.
+  // The last four optional arguments define minimum and maximum values 
+  // for the x and y axes; minX, maxX, minY, maxY
+  // The default min and max values for all four are -1 and 1.
+  cont_joystick = createJoystick("Joystick", width*6.5/8, height*3/4, 175, 50, -1, 1, 1, -1);
+  cont_joystick.setStyle({
+    fillBg: color(0,30),
+    fillBgHover: color(0,30),
+    strokeBg: color(0,50),  //nostroke
+    strokeBgHover: color(0,50),  //nostroke
+    // strokeWeight: 10,
+    rounding: 50,  //change for circle
+    fillHandle: color(0,50)
+    
+  });
+
+  
+  //create jump button
+  cont_jump = createButton("", width*1/8, height*3/4, 50, 50);
+
   
   //create platforms and 1 coin on each platform
   
@@ -62,39 +93,50 @@ function setup() {
   coins = new Group();
   
   //platform for floor
-  createPlatforms(width/128, 128/2, height-128/2);
+  createPlatforms(15, unit/2, height-unit/2);
   //floating platforms
-  createPlatforms(3, 128*4.5, height/2-128/2);
-  createPlatforms(2, 128/2, height/4);
-  createPlatforms(2, 128*9.5, height*3/4-128/2);
-  createPlatforms(3, 128*12.5, height/3-128/2);
+  createPlatforms(3, unit*4.5, height/2-unit/2);
+  createPlatforms(2, unit/2, height/4);
+  createPlatforms(2, unit*9.5, height*3/4-unit/2);
+  createPlatforms(3, unit*12.5, height/3-unit/2);
   
   //create blobSprite
-  blobSprite = createSprite(100, height/2);
+  let blobWdh = 0.8*unit;
+  blobSprite = createSprite(blobWdh, height/2);
   blobSprite.addAnimation('blink', blob_blink);
   blobSprite.addAnimation('run', blob_run);
   blobSprite.addAnimation('jumpUp', blob_jumpUp);
   blobSprite.addAnimation('jumpDown', blob_jumpDown);
   blobSprite.setCollider('circle', 0,12, 100);
-  blobSprite.scale = 1;
+  blobSprite.scale = 0.8;
+  
 }
-
 
 function draw() {
   clear();
   background(bg);
   
-  //set animations and keyboard controls for movement
-  if(keyDown(RIGHT_ARROW)){ //move to the right
+  //   if (cont_joystick.isChanged) {
+  //   // Print a message when Slider 1 is changed
+  //   // that displays its value.
+  //   print(cont_joystick.label + " = "+ cont_joystick.valX );
+  //     print(cont_joystick.valX>0)
+  // }
+  
+    //set animations and keyboard controls for movement
+  if(cont_joystick.valX>0){ //move to the right
     blobSprite.changeAnimation('run'); 
     blobSprite.mirrorX(1);
     blobSprite.velocity.x = 5;
-  } else if(keyDown(LEFT_ARROW)){  //move to the left
+  } else if(cont_joystick.valX<0){  //move to the left
     blobSprite.changeAnimation('run');
     blobSprite.mirrorX(-1);
     blobSprite.velocity.x = -5;
   } else{  //not moving
     blobSprite.changeAnimation('blink');
+    
+
+
     
     //keyboard controls for scale
     if(keyDown(UP_ARROW) && blobSprite.scale <= 2){
@@ -130,10 +172,10 @@ function draw() {
   
   //check position of blobSprite with respect to each platform
   platforms.forEach(function(platform){
-    let platformTop = platform.position.y - 128/2;
-    let platformBottom = platform.position.y + 128/2;
-    let platformLeft = platform.position.x - 128/2;
-    let platformRight = platform.position.x + 128/2;
+    let platformTop = platform.position.y - unit/2;
+    let platformBottom = platform.position.y + unit/2;
+    let platformLeft = platform.position.x - unit/2;
+    let platformRight = platform.position.x + unit/2;
     
     //when blobSprite is directly above or below platform
     if (blobSprite.position.x >= platformLeft && blobSprite.position.x <= platformRight){
@@ -165,19 +207,37 @@ function draw() {
   //collect coins
   blobSprite.overlap(coins, collectCoins);
   
-  // blobSprite.debug = true  //to show collision ellipse of blobSprite
+  blobSprite.debug = true  //to show collision ellipse of blobSprite
   
   drawSprites();
+  drawGui();
+  
+  if(cont_jump.isPressed){
+    blobSprite.velocity.y = -15;
+  }
+  
+  
+//   cont_joystick.x = camera.position.x + 200;
+//   cont_joystick.y= camera.position.y;
+//   cont_jump.x = camera.position.x -400;
+//   cont_jump.y = camera.position.y;
+//   camera.zoom = 1;
+//   camera.position.x = blobSprite.position.x;
+//   camera.position.y = blobSprite.position.y - 200;
+  
+
 }
 
-//jump when mouse clicked, multiple clicks are allowed
-function mouseClicked(){
-  blobSprite.velocity.y = -15;
-}
+
+// //jump when mouse clicked, multiple clicks are allowed
+// function mouseClicked(){
+//   blobSprite.velocity.y = -15;
+// }
 
 function createPlatforms(noOfUnits, startX, y){
   for(let i=0; i < noOfUnits; i++){
-    var platform = createSprite(startX + i*128, y);
+    var platform = createSprite(startX + i*unit, y);
+    platform.scale = unit/128;
     if(i == 0){
       platform.addImage('grassLeft',grassImg[0]);  //when 1st block of full platform
     }else if(i == noOfUnits-1){
@@ -186,13 +246,13 @@ function createPlatforms(noOfUnits, startX, y){
       platform.addImage('grassMid',grassImg[1]);   //blocks between 1st and last block
     }  
     platform.immovable = true;
-    // platform.debug = true  //to show collision box of each platform
+    platform.debug = true  //to show collision box of each platform
     platforms.add(platform);
     
     //create coin on each platform
-    var coin = createSprite(startX + i*128, y-128);
+    var coin = createSprite(startX + i*unit, y-unit);
     coin.addAnimation('spin', coin_animation);
-    coin.scale = 0.3;
+    coin.scale = 0.3*unit/128;
     coins.add(coin);
   }
 }
@@ -201,3 +261,31 @@ function collectCoins(blobSprite, coin){
   coin.remove();
 }
 
+function updateControlPos(){
+  cont_joystick.x = width*7/8;
+  cont_joystick.y = height*3/4;
+  cont_jump.x = width*1/8;
+  cont_jump.y = height*3/4;
+  
+}
+
+//fullscreen and prevent defaults
+
+// prevent scrolling of page
+document.ontouchmove = function(event){
+  event.preventDefault();
+}
+
+//fullscreen
+function keyPressed () {
+  var fs = fullscreen();
+  if (!fs) {
+    fullscreen(true);
+  }
+}
+
+/* full screening will change the size of the canvas */
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  // print(windowWidth, windowHeight)
+}
