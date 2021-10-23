@@ -7,6 +7,7 @@ let gui;
 let SCENE_W = 1920;
 let SCENE_H = 1024;
 let unit = SCENE_W/15;
+let scaleFactor;
 
 var blobSprite;
 var blob_run;
@@ -24,8 +25,9 @@ var grassImg = [];
 var gravity = 0.5;
 
 //touchgui controls
-let cont_joystick;
-let cont_jump;
+let joystick;
+let jumpButton;
+let sizeSlider;
 
 
 function preload(){
@@ -62,7 +64,8 @@ function preload(){
 
 function setup() {
   // createCanvas(windowWidth, windowHeight);
-  createCanvas(SCENE_W, SCENE_H);
+  // scaleFactor = windowWidth/SCENE_W;
+  createCanvas(1536, 864);  //dimensions for acer aspire 14
   
   gui = createGui();
   
@@ -70,22 +73,52 @@ function setup() {
   // The last four optional arguments define minimum and maximum values 
   // for the x and y axes; minX, maxX, minY, maxY
   // The default min and max values for all four are -1 and 1.
-  cont_joystick = createJoystick("Joystick", width*6.5/8, height*3/4, 175, 50, -1, 1, 1, -1);
-  cont_joystick.setStyle({
+  joystick = createJoystick("Joystick", width*6/8, height*3/4, 175, 50, -1, 1, 1, -1);
+  joystick.setStyle({
     fillBg: color(0,30),
     fillBgHover: color(0,30),
+    fillBgActive: color(0,60),
     strokeBg: color(0,50),  //nostroke
     strokeBgHover: color(0,50),  //nostroke
     // strokeWeight: 10,
     rounding: 50,  //change for circle
     fillHandle: color(0,50)
-    
   });
 
   
   //create jump button
-  cont_jump = createButton("", width*1/8, height*3/4, 50, 50);
-
+  jumpButton = createButton("", width*1/8, height*3/4-25, 100, 100);
+  jumpButton.setStyle({
+    fillBg: color(0,30),
+    fillBgHover: color(0,30),
+    fillBgActive: color(0,80),
+    strokeBg: color(0,50),  //nostroke
+    strokeBgHover: color(0,50),  //nostroke
+    strokeBgActive: color(0,80),  //nostroke
+    // strokeWeight: 10,
+    rounding: 50,  //change for circle
+  });
+  
+  //create size slider
+  sizeSlider = createSlider("Size Slider", width/2-100, height*3/4, 200,32, 0.3, 2);
+  sizeSlider.setStyle({
+    fillBg: color(0,30),
+    fillBgHover: color(0,30),
+    fillBgActive: color(0,60),
+    fillTrack: color(0,30),
+    fillTrackHover: color(0,30),
+    fillTrackActive: color(0,60),
+    strokeTrack: color(0,30),
+    strokeTrackHover: color(0,30),
+    strokeTrackActive: color(0,60),
+    strokeBg: color(0,50),  //nostroke
+    strokeBgHover: color(0,50),  //nostroke
+    strokeBgActive: color(0,80),  //nostroke
+    // strokeWeight: 10,
+    rounding: 50,  //change for circle
+    fillHandle: color(0,50)
+  });
+  sizeSlider.val = 1;
   
   //create platforms and 1 coin on each platform
   
@@ -93,15 +126,15 @@ function setup() {
   coins = new Group();
   
   //platform for floor
-  createPlatforms(15, unit/2, height-unit/2);
+  createPlatforms(width/128, 128/2, height-128/2);
   //floating platforms
-  createPlatforms(3, unit*4.5, height/2-unit/2);
-  createPlatforms(2, unit/2, height/4);
-  createPlatforms(2, unit*9.5, height*3/4-unit/2);
-  createPlatforms(3, unit*12.5, height/3-unit/2);
+  createPlatforms(3, 128*4.5, height/2-128/2);
+  createPlatforms(2, 128/2, 128*1.5);
+  createPlatforms(2, 128*9.5, height-128*2.5);
+  // createPlatforms(3, unit*12.5, height/3-unit/2);
   
   //create blobSprite
-  let blobWdh = 0.8*unit;
+  let blobWdh = 0.8*128;
   blobSprite = createSprite(blobWdh, height/2);
   blobSprite.addAnimation('blink', blob_blink);
   blobSprite.addAnimation('run', blob_run);
@@ -110,40 +143,44 @@ function setup() {
   blobSprite.setCollider('circle', 0,12, 100);
   blobSprite.scale = 0.8;
   
+  // camera.position.x = blobSprite.position.x + 100;
+  // camera.position.y = blobSprite.position.y - 200;
+  // camera.zoom = 1.3;
 }
 
 function draw() {
   clear();
   background(bg);
   
-  //   if (cont_joystick.isChanged) {
-  //   // Print a message when Slider 1 is changed
-  //   // that displays its value.
-  //   print(cont_joystick.label + " = "+ cont_joystick.valX );
-  //     print(cont_joystick.valX>0)
-  // }
+  // joystick.x = camera.position.x + 400;
+  // joystick.y= camera.position.y+height/4;
+  // jumpButton.x = camera.position.x -600;
+  // jumpButton.y = camera.position.y + height/4;
+  // sizeSlider.x = camera.position.x;
+  // sizeSlider.y= camera.position.y+height/4;
+  
   
     //set animations and keyboard controls for movement
-  if(cont_joystick.valX>0){ //move to the right
+  if(joystick.valX > 0){ //move to the right
     blobSprite.changeAnimation('run'); 
     blobSprite.mirrorX(1);
     blobSprite.velocity.x = 5;
-  } else if(cont_joystick.valX<0){  //move to the left
+  } else if(joystick.valX < 0){  //move to the left
     blobSprite.changeAnimation('run');
     blobSprite.mirrorX(-1);
     blobSprite.velocity.x = -5;
   } else{  //not moving
     blobSprite.changeAnimation('blink');
     
-
+  blobSprite.scale = sizeSlider.val;
 
     
-    //keyboard controls for scale
-    if(keyDown(UP_ARROW) && blobSprite.scale <= 2){
-      blobSprite.scale += 0.1;
-    }else if(keyDown(DOWN_ARROW) && blobSprite.scale > 0.3){
-      blobSprite.scale -= 0.1;
-    }
+    // //keyboard controls for scale
+    // if(keyDown(UP_ARROW) && blobSprite.scale <= 2){
+    //   blobSprite.scale += 0.1;
+    // }else if(keyDown(DOWN_ARROW) && blobSprite.scale > 0.3){
+    //   blobSprite.scale -= 0.1;
+    // }
     
     //pause at 1st frame after blink
     if(blobSprite.animation.getFrame() == blob_blink.getLastFrame()){
@@ -212,19 +249,9 @@ function draw() {
   drawSprites();
   drawGui();
   
-  if(cont_jump.isPressed){
+  if(jumpButton.isPressed){
     blobSprite.velocity.y = -15;
-  }
-  
-  
-//   cont_joystick.x = camera.position.x + 200;
-//   cont_joystick.y= camera.position.y;
-//   cont_jump.x = camera.position.x -400;
-//   cont_jump.y = camera.position.y;
-//   camera.zoom = 1;
-//   camera.position.x = blobSprite.position.x;
-//   camera.position.y = blobSprite.position.y - 200;
-  
+  }  
 
 }
 
@@ -261,19 +288,12 @@ function collectCoins(blobSprite, coin){
   coin.remove();
 }
 
-function updateControlPos(){
-  cont_joystick.x = width*7/8;
-  cont_joystick.y = height*3/4;
-  cont_jump.x = width*1/8;
-  cont_jump.y = height*3/4;
-  
-}
-
 //fullscreen and prevent defaults
 
-// prevent scrolling of page
-document.ontouchmove = function(event){
-  event.preventDefault();
+/// Add these lines below sketch to prevent scrolling on mobile
+function touchMoved() {
+  // do some stuff
+  return false;
 }
 
 //fullscreen
@@ -284,8 +304,10 @@ function keyPressed () {
   }
 }
 
-/* full screening will change the size of the canvas */
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  // print(windowWidth, windowHeight)
-}
+// /* full screening will change the size of the canvas */
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+//   // scaleFactor = windowWidth/SCENE_W;
+//   // print(windowWidth, windowHeight);
+//   // rescaleAssets();
+// }
