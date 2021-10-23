@@ -10,8 +10,16 @@ let button_feed
 
 var foodArr = [];
 
-// prevent scrolling of page
-document.ontouchmove = function(event){
+// // prevent scrolling of page
+// document.ontouchmove = function(event){
+//   event.preventDefault();
+// }
+
+function touchMove(event){
+  event.preventDefault();
+}
+
+function gestureChange(event){
   event.preventDefault();
 }
 
@@ -260,6 +268,8 @@ class Food{
   
 //   return false;
 // }
+
+
 
 //fullscreen - doesnt work on ios...
 function touchStarted () {
