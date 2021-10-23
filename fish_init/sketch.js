@@ -107,8 +107,6 @@ class Fish {
   }
   
   drawFish(){
-    // push();
-    // translate(this.vTranslate);
   fill(this.filler);
     ellipse(this.x,this.y,this.size,this.size-((this.size)/2));
     triangle(this.x+30,this.y,this.x+80,this.y-30,this.x+80,this.y+30);
@@ -271,18 +269,19 @@ class Food{
 
 
 
-//fullscreen - doesnt work on ios...
-function touchStarted () {
-  var fs = fullscreen();
-  if (!fs) {
-    fullscreen(true);
-  }
-}
+// //fullscreen - doesnt work on ios...
+// function touchStarted () {
+//   var fs = fullscreen();
+//   if (!fs) {
+//     fullscreen(true);
+//   }
+// }
 
-/* full screening will change the size of the canvas */
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-}
+// //fullscreen not working on ios
+// /* full screening will change the size of the canvas */
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+// }
 
 function touchEnded(){
   for(var button of buttonList){
