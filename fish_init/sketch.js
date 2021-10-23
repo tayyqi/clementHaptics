@@ -10,11 +10,6 @@ let button_feed
 
 var foodArr = [];
 
-// // prevent scrolling of page
-// document.ontouchmove = function(event){
-//   event.preventDefault();
-// }
-
 function touchMove(event){
   event.preventDefault();
 }
@@ -60,7 +55,7 @@ class Fish {
     //set x bound
     if(this.x-this.size/2<0){
       this.x = this.size/2;
-    }else if(this.x+80>width){
+    }else if(this.x+80 > width){
       this.x = width-80;
     }
     //set y bound
