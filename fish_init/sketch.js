@@ -25,7 +25,7 @@ function gestureChange(event){
 
 function setup() {
   // setInterval(spawn,1000)
-  createCanvas(1024, 6.5/8*768);
+  createCanvas(1024, 768);
   // frameRate(10);
   
   fish = new Fish(width/2-20, height/2, colorarray[1], 0,90);
