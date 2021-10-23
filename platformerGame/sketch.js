@@ -53,7 +53,8 @@ function preload(){
 }
 
 function setup() {
-  createCanvas(1920, 1024);
+  // createCanvas(1920, 1024);
+  createCanvas(displayWidth, displayHeight);
   
   //create platforms and 1 coin on each platform
   
