@@ -76,6 +76,10 @@ body {
 	right: 60px;
 }
 
+.launch-trigger{
+	right: -100px;
+}
+
 canvas {
 	overflow: hidden;
 	border-radius: 5px;

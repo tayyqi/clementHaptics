@@ -317,6 +317,13 @@
 			.on('mouseup touchend', function(e) {
 				isRightPaddleUp = false;
 			});
+		$('.launch-trigger')
+		.on('mousedown touchstart', function(e) {
+				isRightPaddleUp = true;
+			})
+			.on('mouseup touchend', function(e) {
+				isRightPaddleUp = false;
+			});
 	}
 
 	function launchPinball() {
