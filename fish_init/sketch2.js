@@ -12,7 +12,7 @@ let col = 255;  //base col button white
 var foodArr = [];
 
 function preload() {
-    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet.png", 1000/4, 449, 4);
+    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet2.png", 449, 1000/4, 4);
     fish_swim = loadAnimation(swimSpritesheet);
 }
 
@@ -24,10 +24,12 @@ function setup() {
   
 //   fish = new Fish(width/2-20, height/2, colorarray[1], 0,90);
 //   fisharray.push(fish);
+    fish_swim.frameDelay = 7;
     fish = createSprite(width/2, height/2, 1000/2, 449);
     fish.addAnimation("swim", fish_swim);
     fish.scale = 0.5;
-    fish.frameDelay = 100;
+    
+    // fish.rotateToDirection = true;
   
   gui = createGui();
   
@@ -35,7 +37,8 @@ function setup() {
   // The last four optional arguments define minimum and maximum values 
   // for the x and y axes; minX, maxX, minY, maxY
   // The default min and max values for all four are -1 and 1.
-  joystick = createJoystick("Joystick", width*6.5/8, height*2.8/4, 175, 175, -1, 1, 1, -1);
+  let maxDisp = 10;
+  joystick = createJoystick("Joystick", width*6.5/8, height*2.8/4, 175, 175, -maxDisp, maxDisp, maxDisp, -maxDisp);
   joystick.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
@@ -95,98 +98,6 @@ function setup() {
   }
 }
 
-class Fish {
-  constructor(x,y,filler,speed,size){
-    this.x_init = x;
-    this.y_init = y;
-    this.x = x;
-    this.y = y;
-    this.filler = filler;
-    this.speedX = speed;
-    this.speedY = speed;
-    this.size = size;
-    this.drxn = "left";  //direction faced
-    
-    this.peek = false;
-    this.escape = false;
-  }
-  
-
-  //movement
-  swim(){
-    //set x bound
-    if(this.x-this.size/2<0){
-      this.x = this.size/2;
-    }else if(this.x+80>width){
-      this.x = width-80;
-    }
-    //set y bound
-    if(this.y-this.size/4<0) {
-       this.y = this.size/4;
-     }else if(this.y + this.size/4 > height){
-       this.y = height - this.size/4;
-     }
-    
-    if(this.escape){  //escape enclosure
-      this.speedX = 5*joystick.valX;
-      this.speedY = 5*joystick.valY;
-      
-    }else{  //within enclosure
-      if(this.peek){
-        this.speedX = -2;
-        this.speedY = -2;
-        if(this.x == this.x_init-50 && this.y == this.y_init-50){
-          this.speedX = 0;
-          this.speedY = 0;
-          // this.speedX = 5*joystick.valX;
-          // this.speedY = 5*joystick.valY;
-          if(joystick.isPressed){
-            this.escape = true;
-          }
-        }
-      }else{
-        this.speedX = 2;
-        this.speedY = 2;
-        if(this.x == this.x_init || this.y == this.y_init){
-          this.x = this.x_init;
-          this.y = this.y_init;
-          this.speedX = 0;
-          this.speedY = 0;
-        }
-      }
-    }
-
-    this.x += this.speedX;
-    this.y += this.speedY;
-  }
-  
-  drawFish(){
-    // push();
-  fill(this.filler);
-    //body
-    ellipse(this.x,this.y,this.size,this.size-((this.size)/2));
-    //tail
-    if(this.drxn == "left"){
-      triangle(this.x+30,this.y,this.x+80,this.y-30,this.x+80,this.y+30);
-    fill(20);
-      //eyes
-      ellipse(this.x-20,this.y,10,10);
-    }else{
-      //tail
-      triangle(this.x-30,this.y,this.x-80,this.y-30,this.x-80,this.y+30);
-    fill(20);
-      //eyes
-      ellipse(this.x+20,this.y,10,10);
-    }
-    
-    
-    // pop();
-    // fill(100, 80)
-    // rect(this.x-this.size/2, this.y-this.size/4, this.size, this.size/2);// body region
-  }
-  
-}
-
 class Food{
   constructor(size, color){
     this.x = 100;
@@ -225,12 +136,19 @@ function touchStarted () {
 
 function draw() {
   background(0,0,100);
-  
+
   if(joystick.valX<0){
-    fish.drxn = "left";
+    fish.changeAnimation('swim');
+    fish.mirrorX(-1);
   } else if(joystick.valX>0) {
-    fish.drxn = "right";
+    fish.changeAnimation('swim');
+    fish.mirrorX(1);
+  }else{
+    fish.changeAnimation('swim');
   }
+
+  fish.position.x += joystick.valX;
+  fish.position.y += joystick.valY;
   
   for(var i=0; i<foodArr.length; i++){
     let food = foodArr[i];
