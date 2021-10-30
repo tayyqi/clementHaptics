@@ -150,15 +150,7 @@ function setup() {
 
 function draw() {
   clear();
-  background(bg);
-  
-  // joystick.x = camera.position.x + 400;
-  // joystick.y= camera.position.y+height/4;
-  // jumpButton.x = camera.position.x -600;
-  // jumpButton.y = camera.position.y + height/4;
-  // sizeSlider.x = camera.position.x;
-  // sizeSlider.y= camera.position.y+height/4;
-  
+  background(bg);  
   
     //set animations and keyboard controls for movement
   if(joystick.valX > 0){ //move to the right
