@@ -27,6 +27,8 @@ function setup() {
     fish_swim.frameDelay = 7;
     fish = createSprite(width/2, height/2, 1000/2, 449);
     fish.addAnimation("swim", fish_swim);
+    fish.setCollider('rectangle', 0,0, 400,100);
+    fish.debug = true;
     fish.scale = 0.5;
     
     // fish.rotateToDirection = true;
@@ -163,14 +165,21 @@ function draw() {
 
   }
   
+  //set boundaries
+  if(fish.position.x < 100){
+    fish.position.x = 100;
+  }else if(fish.position.x > width - 100) {
+    fish.position.x = width - 100;
+  }
+
+  if(fish.position.y < 50){
+    fish.position.y = 50;
+  }else if(fish.position.y > height - 50) {
+    fish.position.y = height - 50;
+  }
+
   noStroke();
   drawSprites();
-//   fish.drawFish();
-//   fish.swim();
-  // for(var h of fisharray){
-  //   h.drawFish()
-  //   h.swim()
-  // }
   drawGui();
 
 }
