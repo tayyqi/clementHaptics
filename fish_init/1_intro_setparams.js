@@ -36,8 +36,9 @@ function setup() {
 
   for(i=0; i<5; i++){
     buttons.push([]);
-    let gate = createSprite(width-20 + i*width, height/2, 20, height/4);
-    gate.shapeColor = color(255,80);  //transparent white
+    let posX = width - 20 + i*width;
+    let gate = createSprite(posX, height/2, 20, height/4);
+    gate.shapeColor = color(255,50);  //transparent white
     gate.page = i;
     gate.debug=true;
     // gate.setCollider = true;
@@ -60,14 +61,38 @@ function setup() {
   //create page1 feeding ground
   for(let i=0; i<3; i++){
     let posX = 400 + i*300;
-    let feedButton = createFeedCoral(posX+width, 80, 150,150, "feed");
+    let feedButton = createFeedCoral(posX+width, 80, 150,150, "coral");
     buttons[1].push(feedButton);
   }
   for(let i=0; i<3; i++){
     let posX = 200 + i*300;
-    let feedButton = createFeedCoral(posX+width, 650, 150,150, "feed");
+    let feedButton = createFeedCoral(posX+width, 650, 150,150, "coral");
     buttons[1].push(feedButton);
   }
+
+  //create page2 sea urchins
+  let wVal = [50,200,125,150];
+  let posX = 200 + 2*width;
+  let posY = 100;
+  for(let i=0; i<7; i++){
+    let w = wVal[i%4];
+    let seaUrchinTop = createSeaUrchin(posX, posY, w,w);
+    buttons[2].push(seaUrchinTop);
+    posX = posX + w*1.4;
+  }
+
+  posX = 100 + 2*width;
+  posY = 500;
+  for(let i=0; i<6; i++){
+    let val = i+2;
+    let w = wVal[val%4];
+    posY = 800 - w;
+    let seaUrchin = createSeaUrchin(posX, posY, w,w);
+    buttons[2].push(seaUrchin);
+    posX = posX + w*1.4;
+    // newposX = newposX + w*1.4;
+  }
+
 
 
   // Create Joystick.
@@ -125,24 +150,6 @@ function draw() {
   fish.position.x += joystick.valX;
   fish.position.y += joystick.valY;
 
-
-  // for(let i=0; i<foodArr.length; i++){
-  //   if(feed.position.x>width || feed.position.x<0 || feed.position.y<0 || feed.position.y>height){
-  //     feed.remove();
-  // }
-
-  // for(var i=0; i<foodArr.length; i++){
-  //   let food = foodArr[i];
-  //   food.spawn();
-    
-  //   //remove food when overlap with fish body
-  //   //remove food when oob
-  //   if(food.x > fish.x-fish.size/2 && food.x < fish.x+fish.size/2 && food.y > fish.y-fish.size/4 && food.y < fish.y+fish.size/4 ||
-  //     food.x > width || food.y > height){
-  //     foodArr.splice(i,1);
-  //   }
-
-  // }
   
   //set boundaries
   if(fish.position.x < 100){
@@ -173,12 +180,13 @@ function draw() {
 
   if(callNextPage){
     for(gate of gates){
-      for(let i=0; i<gates.length; i++){
-        let newPosX = gate.position.x - width;
-        while(gate.position.x > newPosX){
-          gate.position.x-- ;
-        }
+
+      let newPosX = gate.position.x - width;
+      while(gate.position.x > newPosX){
+        gate.position.x-- ;
       }
+      print("gate" + gate.page + ": " + gate.position)
+      
     }
     print("callnextpage")
     for(let i=0; i<buttons.length; i++){
@@ -217,6 +225,13 @@ function nextPage(fish, gate){
 
 function eat(fish, feed) {
   feed.remove();
-  fish.score++
+  fish.score++;
   print("point: " + fish.score);
+}
+
+
+function keyTyped() {
+  if(key == '1'){
+    gateOpen = true;
+  }
 }
