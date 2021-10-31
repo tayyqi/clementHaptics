@@ -9,8 +9,7 @@ let callNextPage = false;
 let gates;
 let gateOpen = true;
 let pages = [];
-
-let point = 0;
+let buttons = [];
 
 let gui;
 let joystick;
@@ -27,16 +26,19 @@ function setup() {
   // createCanvas(1024, 6/8*768);
   createCanvas(1536,864);//acer aspire14 aspect ratio
   // frameRate(10);
+  foodArr = new Group();
   gates = new Group();
 
-  //each page is a new group
+  //each page is a new group for sprites
   for(let i=0; i<5; i++){
     pages.push(new Group());
   }
 
   for(i=0; i<5; i++){
+    buttons.push([]);
     let gate = createSprite(width-20 + i*width, height/2, 20, height/4);
     gate.shapeColor = color(255,80);  //transparent white
+    gate.page = i;
     gate.debug=true;
     // gate.setCollider = true;
     gates.add(gate);
@@ -49,12 +51,23 @@ function setup() {
   fish.setCollider('rectangle', 0,0, 400,100);
   fish.debug = true;
   fish.scale = 0.5;
+  fish.score = 0;
     
   
   point = 0;
   gui = createGui();
   
-  //create page
+  //create page1 feeding ground
+  for(let i=0; i<3; i++){
+    let posX = 400 + i*300;
+    let feedButton = createFeedCoral(posX+width, 80, 150,150, "feed");
+    buttons[1].push(feedButton);
+  }
+  for(let i=0; i<3; i++){
+    let posX = 200 + i*300;
+    let feedButton = createFeedCoral(posX+width, 650, 150,150, "feed");
+    buttons[1].push(feedButton);
+  }
 
 
   // Create Joystick.
@@ -144,11 +157,46 @@ function draw() {
     fish.position.y = height - 50;
   }
 
+  let curGate = gates[currentPage];
   if(gateOpen){
-    let curGate = gates[currentPage];
     curGate.shapeColor = color(100,200,200);
     fish.overlap(gates, nextPage);
+  }else{
+    curGate.shapeColor = color(100,50);
   }
+
+  let page1Buttons = buttons[1]
+  for(let i=0; i<page1Buttons.length; i++){
+    let button = page1Buttons[i];
+    // button.x -= 10;
+  }
+
+  if(callNextPage){
+    for(gate of gates){
+      for(let i=0; i<gates.length; i++){
+        let newPosX = gate.position.x - width;
+        while(gate.position.x > newPosX){
+          gate.position.x-- ;
+        }
+      }
+    }
+    print("callnextpage")
+    for(let i=0; i<buttons.length; i++){
+      let curPageButtons = buttons[i];
+      for(let j=0; j<curPageButtons.length; j++){
+        let button = curPageButtons[j];
+        let newPosX = button.x - width;
+        // button.x -= 1;
+        while(button.x > newPosX){
+          button.x -= 1;
+        }
+      }
+    }
+    callNextPage = false;
+    gateOpen = false;
+  }
+
+  fish.overlap(foodArr, eat);
 
 
   noStroke();
@@ -159,9 +207,16 @@ function draw() {
 
 function nextPage(fish, gate){
   currentPage += 1;
-  while(gate.position.x>0){
-    gate.position.x -=.01;  //change to slow moving animation
-  }
-  
+  // for(let i=0; i<width; i++) {
+  //   gate.position.x -=i;  //change to slow moving animation
+  // }
   gateOpen = false;
+  callNextPage = true;
+  print("nextpage")
+}
+
+function eat(fish, feed) {
+  feed.remove();
+  fish.score++
+  print("point: " + fish.score);
 }

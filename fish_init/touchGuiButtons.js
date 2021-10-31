@@ -1,7 +1,7 @@
 
   //create feed button
-  function createCoral (x, y, w, h) {
-    let feedButton = createButton("", x, y, w, h);  //"", 220, 130, 100, 100
+  function createFeedCoral (x, y, w, h, text) {
+    let feedButton = createButton(text, x, y, w, h);  //"", 220, 130, 100, 100
     feedButton.setStyle({
         fillBg: color(col,30),
         fillBgHover: color(col,30),
@@ -10,24 +10,24 @@
         strokeBgHover: color(col,50),  //nostroke
         strokeBgActive: color(col,80),  //nostroke
         // strokeWeight: 10,
-        rounding: 50,  //change for circle
+        rounding: w/2,  //change for circle
     });
     feedButton.onPress = function(){
       for(let i=0; i<random(5,10); i++){
-        let feed = createSprite(220,130,30,30);
-        feed.velocity.x = random(3,7);
-        feed.velocity.y = random(1,7);
-        foodAll.add(feed);
-
-        print("feed");
+        let feed = createSprite(feedButton.x, feedButton.y,10,10);
+        feed.debug=true;
+        feed.velocity.x = random(-7,7);
+        feed.velocity.y = random(-7,7);
+        foodArr.add(feed);
       }
-        
+      print("feed"); 
     }
+    return feedButton;
    }
   
     //create enclosure button
   function createEnclosure(x, y, w, h){
-    enclosureButton = createButton("", width/2-100, height/2-100, 200, 200);
+    let enclosureButton = createButton("", width/2-100, height/2-100, 200, 200);
     enclosureButton.setStyle({
       fillBg: color(col,30),
       fillBgHover: color(col,30),
@@ -36,7 +36,7 @@
       strokeBgHover: color(col,50),  //nostroke
       strokeBgActive: color(col,80),  //nostroke
       // strokeWeight: 10,
-      rounding: 100,  //change for circle
+      rounding: w/2,  //change for circle
     });
     enclosureButton.onPress = function(){
       if(fish.escape){
@@ -56,4 +56,6 @@
       feed.remove();
       // point +=1;
     }
+
+    return enclosureButton;
   }
