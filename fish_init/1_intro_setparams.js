@@ -38,7 +38,7 @@ function setup() {
     buttons.push([]);
     let posX = width - 20 + i*width;
     let gate = createSprite(posX, height/2, 20, height/4);
-    gate.shapeColor = color(255,50);  //transparent white
+    gate.shapeColor = color(255,20);  //transparent white
     gate.page = i;
     gate.debug=true;
     // gate.setCollider = true;
@@ -49,7 +49,7 @@ function setup() {
   fish_swim.frameDelay = 10;
   fish = createSprite(width/2, height/2, 1000/2, 449);
   fish.addAnimation("swim", fish_swim);
-  fish.setCollider('rectangle', 0,0, 400,100);
+  fish.setCollider('rectangle', 0,0, 400,200);
   fish.debug = true;
   fish.scale = 0.5;
   fish.score = 0;
@@ -76,7 +76,7 @@ function setup() {
   let posY = 100;
   for(let i=0; i<7; i++){
     let w = wVal[i%4];
-    let seaUrchinTop = createSeaUrchin(posX, posY, w,w);
+    let seaUrchinTop = createSeaCreature(posX, posY, w,w, "Sea Urchin");
     buttons[2].push(seaUrchinTop);
     posX = posX + w*1.4;
   }
@@ -87,10 +87,22 @@ function setup() {
     let val = i+2;
     let w = wVal[val%4];
     posY = 800 - w;
-    let seaUrchin = createSeaUrchin(posX, posY, w,w);
+    let seaUrchin = createSeaCreature(posX, posY, w,w, "Sea Urchin");
     buttons[2].push(seaUrchin);
     posX = posX + w*1.4;
-    // newposX = newposX + w*1.4;
+  }
+
+  //create page3 octopus, hiding
+  posX = width-600;
+  let octopus = createSeaCreature(posX + 3*width, height/2-200, 400,400, "Octopus");
+  buttons[3].push(octopus);
+  for(let i=0; i<2; i++){1//top row
+    let enclosure = createEnclosure(200 + 3*width + i*400, 70+i*60, 150);
+    buttons[3].push(enclosure);
+  }
+  for(let i=0; i<2; i++){1//bottom row
+    let enclosure = createEnclosure(200 + 3*width + i*400, height -200-i*60, 150);
+    buttons[3].push(enclosure);
   }
 
 
@@ -200,6 +212,11 @@ function draw() {
         }
       }
     }
+
+    //reset fish to left most
+    fish.position.x = 30;
+    fish.position.y = height/2;
+
     callNextPage = false;
     gateOpen = false;
   }

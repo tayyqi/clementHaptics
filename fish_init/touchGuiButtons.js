@@ -14,7 +14,7 @@ function createFeedCoral (x, y, w, h, text) {
   });
   feedButton.onPress = function(){
     for(let i=0; i<random(5,10); i++){
-      let feed = createSprite(feedButton.x, feedButton.y,10,10);
+      let feed = createSprite(feedButton.x, feedButton.y,20,20);
       feed.debug=true;
       feed.velocity.x = random(-7,7);
       feed.velocity.y = random(-7,7);
@@ -25,11 +25,11 @@ function createFeedCoral (x, y, w, h, text) {
   return feedButton;
 }
 
-// create sea urchin
+// create sea creature
 // sea urchin bubbles when touched -- get points?
 //minus points whn bump into sea urchin
-function createSeaUrchin(x, y, w, h) {
-  let seaUrchinButton = createButton("sea urchin", x, y, w, h);
+function createSeaCreature(x, y, w, h, name) {
+  let seaUrchinButton = createButton(name, x, y, w, h);
   seaUrchinButton.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
@@ -53,8 +53,8 @@ function createSeaUrchin(x, y, w, h) {
 
 
 //create enclosure button
-function createEnclosure(x, y, w, h){
-  let enclosureButton = createButton("", width/2-100, height/2-100, 200, 200);
+function createEnclosure(x, y, w){
+  let enclosureButton = createButton("", x, y, w, w);
   enclosureButton.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
