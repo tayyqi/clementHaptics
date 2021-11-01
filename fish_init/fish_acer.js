@@ -58,6 +58,9 @@ function preload() {
     enclosure = loadAnimation(enclosureSS);
 }
 
+// an array to add multiple particles
+let particles = [];
+
 function setup() {
   frameRate(80);
   // createCanvas(1024, 6/8*768);
@@ -149,6 +152,10 @@ function setup() {
     fillHandle: color(col,50)
   });
   
+  //create bg particles
+  for(let i = 0;i<width/50;i++){
+    particles.push(new Particle(random(0,width)));
+  }
 }
 
 
@@ -168,6 +175,21 @@ function windowResized() {
 
 function draw() {
   background(0,0,50);
+
+  //show particles as bg
+  for(let i = 0;i<particles.length;i++) {
+    let particle = particles[i];
+    particle.createParticle();
+    particle.moveParticle();
+    if(particle.x < 0 || particle.x > width || particle.y < 0 || particle.y > height){
+      particles.push(new Particle(width));
+      particles.splice(i,1);
+    }
+        //   this.xSpeed*=-1;
+        // if(this.y < 0 || this.y > height)
+        //   this.ySpeed*=-1;
+  }
+  
 
   
   if(joystick.valX<0){
