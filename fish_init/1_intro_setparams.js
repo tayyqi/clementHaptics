@@ -18,7 +18,7 @@ let col = 255;  //base col button white
 var foodArr;
 
 function preload() {
-    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet2.png", 449, 1000/4, 4);
+    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet.png", 7152/12, 4210/5, 53);
     fish_swim = loadAnimation(swimSpritesheet);
 }
 
