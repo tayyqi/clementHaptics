@@ -53,6 +53,7 @@ function setup() {
   // fish.debug = true;
   fish.scale = 0.5;
   fish.score = 0;
+  fish.hide = false;
     
   
   point = 0;
@@ -237,13 +238,16 @@ function nextPage(fish, gate){
   // }
   gateOpen = false;
   callNextPage = true;
-  print("nextpage")
+  print("nextpage");
 }
 
 function eat(fish, feed) {
   feed.remove();
   fish.score++;
   print("point: " + fish.score);
+  if (fish.score > 10 && currentPage == 1){
+    gateOpen = true;
+  }
 }
 
 
