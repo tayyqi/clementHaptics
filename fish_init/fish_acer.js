@@ -9,7 +9,7 @@ let seaweedFiles = ['assets/seaweed_001.png',
                     'assets/seaweed_004.png']
 let seaweedFrames = [];
 let seaUrchin;  //animation
-let octopus
+let octopus;
 let octopus_ani;  //animation
 let enclosure; //animation
 let escaped = false;
@@ -119,9 +119,10 @@ function setup() {
   posX = width-600 + pageNum*width;
   posY = height/2-200;
   octopus = createSprite(posX+400/2, posY+400/2,400,400);
+  octopus.start = false;
   octopus.addAnimation("octopus", octopus_ani);
-  octopus.scale = 0.8;
-  octopus.setCollider("circle", 0,0, seaUrchInnerRad*0.8);
+  octopus.scale = 1;
+  octopus.setCollider("circle", 0,0, 200);
   octopus.debug = true;
   pages[pageNum].add(octopus);
   let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
@@ -254,14 +255,36 @@ function draw() {
 
   //lose points when touch sea urchin or octopus
   fish.collide(seaUrchins, spritesCollide);
-  fish.collide(octopus, spritesCollide);
+  
 
   if(fish.hide == false){
     fish.collide(enclosures, spritesCollide)
+    fish.collide(octopus, spritesCollide);
   }
   if(currentPage == 3){
-    octopus.scale += sin(theta)*0.01;
-    theta +=0.03;
+    if(octopus.start){
+      if(octopus.position.x < octopus.scale*200 || octopus.position.x > width-octopus.scale*200){
+        octopus.velocity.x *= -1;
+      } else if(octopus.position.y < octopus.scale*200 || octopus.position.y > height-octopus.scale*200){
+        octopus.velocity.y *= -1;
+      }
+    }else{
+      octopus.velocity.x = -10;
+      octopus.velocity.y = 5;
+      octopus.start = true;
+    }
+ 
+    // if(octopus.position.x < 400){
+    //   octopus.position.x = 400;
+    // } else if(octopus.position.x > width-400){
+    //   octopus.position.x = width-40;
+    // } else if(octopus.position.y < 400){
+    //   octopus.position.y = 200;
+    // } else if(octopus.position.y > height-400){
+    //   octopus.position.y = height-400;
+    // }
+    // octopus.scale += sin(theta)*0.01;
+    // theta +=0.03;
   }else{
     theta = 0;
   }
@@ -287,7 +310,7 @@ function nextPage(fish, gate){
   // }
   gateOpen = false;
   callNextPage = true;
-  print("nextpage");
+  console.log("nextpage " + currentPage);
 }
 
 function eat(feed, fish) {
