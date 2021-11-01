@@ -2,13 +2,19 @@ fisharray =[];
 colorarray = ['#b04119','yellow','blue'];
 let fish;
 let fish_swim;
+let seaweed;  //animation
+let seaUrchin;  //animation
+let octopus;  //animation
+let enclosure;
 let escaped = false;
 let currentPage = 0;
 let callNextPage = false;
 
+let seaweeds; //group
+let seaUrchins;//group
 let gates;
 let gateOpen = true;
-let pages = [];
+let pages = []; //collection of sprites in each page, including gates, seaweed, sea urchins and octopus
 let buttons = [];
 
 let gui;
@@ -18,16 +24,28 @@ let col = 255;  //base col button white
 var foodArr;
 
 function preload() {
-    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet.png", 7152/12, 4210/5, 53);
+    let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet.png", 7152/12, 4210/5, 53);  //white fish
+    // let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet2.png", 449, 1000, 4); //blue fish
     fish_swim = loadAnimation(swimSpritesheet);
+    let seaweedSS = loadSpriteSheet("assets/seaweed.png", 199, 286, 1);
+    seaweed = loadAnimation(seaweedSS);
+    // let octopusSS = loadSpriteSheet("assets/octopus.png", 199, 286, 1);
+    // octopus = loadAnimation(octopusSS);
+    let seaUrchSS = loadSpriteSheet("assets/seaUrchin.png", 274, 288, 1);
+    seaUrchin = loadAnimation(seaUrchSS);
+    let enclosureSS = loadSpriteSheet("assets/enclosure.png", 207, 216, 1);
+    enclosure = loadSpriteSheet(enclosureSS);
 }
 
 function setup() {
+  frameRate(500);
   // createCanvas(1024, 6/8*768);
-  createCanvas(1536,864);//acer aspire14 aspect ratio
+  createCanvas(1536,864); //acer aspire14 aspect ratio
   // frameRate(10);
   foodArr = new Group();
   gates = new Group();
+  seaweeds = new Group();
+  seaUrchins = new Group();
 
   //each page is a new group for sprites
   for(let i=0; i<5; i++){
@@ -46,11 +64,11 @@ function setup() {
     pages[i].add(gate);
   }
 
-  fish_swim.frameDelay = 10;
+  // fish_swim.frameDelay = 10; //for bluefish
   fish = createSprite(width/2, height/2, 1000/2, 449);
   fish.addAnimation("swim", fish_swim);
-  fish.setCollider('rectangle', 0,0, 400,200);
-  // fish.debug = true;
+  fish.setCollider('rectangle', -5,-15, 350,180);
+  fish.debug = true;
   fish.scale = 0.5;
   fish.score = 0;
   fish.hide = false;
@@ -60,42 +78,22 @@ function setup() {
   gui = createGui();
   
   //create page1 feeding ground
-  for(let i=0; i<3; i++){
-    let posX = 400 + i*300;
-    let feedButton = createFeedCoral(posX+width, 80, 150,150, "coral");
-    buttons[1].push(feedButton);
-  }
-  for(let i=0; i<3; i++){
-    let posX = 200 + i*300;
-    let feedButton = createFeedCoral(posX+width, 650, 150,150, "coral");
-    buttons[1].push(feedButton);
-  }
+  createSeaweed(1, 400, 80, 3); //top row
+  createSeaweed(1, 200, 650, 3); //bottom row
 
   //create page2 sea urchins
-  let wVal = [50,200,125,150];
-  let posX = 200 + 2*width;
+  let posX = 200;
   let posY = 100;
-  for(let i=0; i<7; i++){
-    let w = wVal[i%4];
-    let seaUrchinTop = createSeaCreature(posX, posY, w,w, "Sea Urchin");
-    buttons[2].push(seaUrchinTop);
-    posX = posX + w*1.4;
-  }
+  //top row
+  createSeaUrchins(2, posX, posY, 7, 0, 0, "TOP");
+  // bottom row
+  posX = 100;
+  createSeaUrchins(2, posX, 800, 6, 7, 2, "BOTTOM");
 
-  posX = 100 + 2*width;
-  posY = 500;
-  for(let i=0; i<6; i++){
-    let val = i+2;
-    let w = wVal[val%4];
-    posY = 800 - w;
-    let seaUrchin = createSeaCreature(posX, posY, w,w, "Sea Urchin");
-    buttons[2].push(seaUrchin);
-    posX = posX + w*1.4;
-  }
 
   //create page3 octopus, hiding
   posX = width-600;
-  let octopus = createSeaCreature(posX + 3*width, height/2-200, 400,400, "Octopus");
+  let octopus = createSeaCreature(posX + 3*width, height/2-200, 400, 0, "Octopus");
   buttons[3].push(octopus);
   for(let i=0; i<2; i++){1//top row
     let enclosure = createEnclosure(200 + 3*width + i*400, 70+i*60, 150);
@@ -152,10 +150,10 @@ function draw() {
 
   if(joystick.valX<0){
     fish.changeAnimation('swim');
-    fish.mirrorX(-1);
+    fish.mirrorX(1);
   } else if(joystick.valX>0) {
     fish.changeAnimation('swim');
-    fish.mirrorX(1);
+    fish.mirrorX(-1);
   }else{
     fish.changeAnimation('swim');
   }
@@ -192,15 +190,24 @@ function draw() {
   }
 
   if(callNextPage){
-    for(gate of gates){
-
-      let newPosX = gate.position.x - width;
-      while(gate.position.x > newPosX){
-        gate.position.x-- ;
+    for(page of pages){
+      for(sprite of page){
+        let newPosX = sprite.position.x - width;
+        while(sprite.position.x > newPosX){
+          sprite.position.x-- ;
+        }
+        // print("gate" + gate.page + ": " + gate.position)
       }
-      print("gate" + gate.page + ": " + gate.position)
-      
     }
+    // for(gate of gates){
+
+    //   let newPosX = gate.position.x - width;
+    //   while(gate.position.x > newPosX){
+    //     gate.position.x-- ;
+    //   }
+    //   print("gate" + gate.page + ": " + gate.position)
+      
+    // }
     print("callnextpage")
     for(let i=0; i<buttons.length; i++){
       let curPageButtons = buttons[i];
@@ -222,7 +229,11 @@ function draw() {
     gateOpen = false;
   }
 
+  //to account for which sprite is above
   fish.overlap(foodArr, eat);
+  for(food of foodArr){
+    food.overlap(fish, eat)
+  }
 
 
   noStroke();
