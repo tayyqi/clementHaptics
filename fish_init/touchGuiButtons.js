@@ -1,7 +1,8 @@
 
 //create feed button
 function createFeedCoral (x, y, w, h, text) {
-  let feedButton = createButton(text, x, y, w, h);  //"", 220, 130, 100, 100
+  let feedButton = createButton("", x, y, w, h);  //("", 220, 130, 100, 100)
+  feedButton.name = text;
   feedButton.setStyle({
       fillBg: color(col,30),
       fillBgHover: color(col,30),
@@ -12,6 +13,7 @@ function createFeedCoral (x, y, w, h, text) {
       // strokeWeight: 10,
       rounding: w/2,  //change for circle
   });
+  
   feedButton.onPress = function(){
     for(let i=0; i<random(5,10); i++){
       let feed = createSprite(feedButton.x, feedButton.y,20,20);
@@ -28,9 +30,11 @@ function createFeedCoral (x, y, w, h, text) {
 // create sea creature
 // sea Creature bubbles when touched -- get points?
 //minus points whn bump into sea Creature
-function createSeaCreature(x, y, w, h, name) {
-  let seaCreatureButton = createButton(name, x, y, w, h);
+function createSeaCreature(x, y, w, i, name) {
+  let seaCreatureButton = createButton("", x, y, w, w);
+  seaCreatureButton.name = name;
   seaCreatureButton.life = 10;
+  seaCreatureButton.index = i;
   seaCreatureButton.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
@@ -42,11 +46,13 @@ function createSeaCreature(x, y, w, h, name) {
     rounding: w/2,  //change for circle 
   });
   seaCreatureButton.onPress = function(){
-    if(seaCreatureButton.label == "Octopus"){
+    if(seaCreatureButton.name == "Octopus"){
       fish.score+=10;
       seaCreatureButton.life -= 1;
-    } else if(seaCreatureButton.label == "Sea Urchin"){
-      print("pressed")
+    } else if(seaCreatureButton.name == "Sea Urchin"){
+      let sprite = seaUrchins[seaCreatureButton.index];
+      sprite.scale += 0.5;
+      sprite.debug = true;
     }
   }
 
@@ -77,15 +83,17 @@ function createEnclosure(x, y, w){
   });
   enclosureButton.onPress = function(){
     if(fish.hide){
-      fish.x = enclosureButton.xInit;
-      fish.y = enclosureButton.yInit;
+      fish.position.x = enclosureButton.xInit;
+      fish.position.y = enclosureButton.yInit;
       enclosureButton.xInit = 0;
       enclosureButton.yInit = 0;
+      fish.hide = false;
     }  else{
-      enclosureButton.xInit = fish.x;
-      enclosureButton.yInit = fish.y;
-      fish.x = enclosureButton.x + enclosureButton.w;
-      fish.y = enclosureButton.y + enclosureButton.h;
+      enclosureButton.xInit = fish.position.x;
+      enclosureButton.yInit = fish.position.y;
+      fish.position.x = enclosureButton.x + enclosureButton.w/2;
+      fish.position.y = enclosureButton.y + enclosureButton.h/2;
+      fish.hide = true;
     }
   }
 
