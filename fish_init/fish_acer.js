@@ -40,7 +40,7 @@ function setup() {
     let gate = createSprite(posX, height/2, 20, height/4);
     gate.shapeColor = color(255,20);  //transparent white
     gate.page = i;
-    gate.debug=true;
+    // gate.debug=true;
     // gate.setCollider = true;
     gates.add(gate);
     pages[i].add(gate);
@@ -50,7 +50,7 @@ function setup() {
   fish = createSprite(width/2, height/2, 1000/2, 449);
   fish.addAnimation("swim", fish_swim);
   fish.setCollider('rectangle', 0,0, 400,200);
-  fish.debug = true;
+  // fish.debug = true;
   fish.scale = 0.5;
   fish.score = 0;
     
