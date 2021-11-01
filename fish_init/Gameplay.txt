@@ -1,0 +1,24 @@
+Fish Interactive Story
+
+Overview: the player takes the role of a white fish which explores the sea.
+The goal is to clear all the gates and reach the end
+
+There are 5 pages in total, with 3 distinct levels
+Pages are numbered 0-4 for easy reference in indexing within the code
+
+Page1: Seaweed Feeding Ground
+Tap on the seaweed to release food
+Eat the food to gain points
+Get higher than 20 points to open the gates
+
+Page2: Sea Urchin Field
+Tap on the sea urchins to open the gate. Only 1 sea urchin holds the key
+Sea Urchins will increase/decrease in size randomly when tapped on
+Colliding with sea urchin --> -2 points
+
+Page3: Octopus survival
+Survive the Octopus Attack
+Tap on the octopus button to kill the octopus. You can only do this when you are not hiding
+Hide in the enclosures to escape the tentacles
+Collision with octopus --> -10pts
+Each hit on the octopus --> +10pts
