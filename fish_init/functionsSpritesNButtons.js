@@ -49,6 +49,8 @@ function createHideEnclosure(pageNum, posX, posY, yDrxn, count){
         let hideSprite = createSprite(posX + i*400 + 75, posY + yDrxn*i*60 + 75, 207,216);
         hideSprite.addAnimation("still", enclosure);
         hideSprite.scale = 1;
+        hideSprite.setCollider("circle", 0,0, 120);
+        hideSprite.debug = true;
         pages[pageNum].add(hideSprite);
         enclosures.add(hideSprite);
         let enclosureButton = createEnclosure(posX + i*400, posY + yDrxn*i*60, 150);

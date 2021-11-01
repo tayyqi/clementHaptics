@@ -47,7 +47,7 @@ function createSeaCreature(x, y, w, i, name) {
   });
   seaCreatureButton.onPress = function(){
     if(seaCreatureButton.name == "Octopus"){
-      if(seaCreatureButton.life > 0){
+      if(seaCreatureButton.life > 0 && fish.hide == false){
         fish.score += 10;
         seaCreatureButton.life -= 1;
         octopus.scale *=0.8;
@@ -117,7 +117,7 @@ function createEnclosure(x, y, w){
       enclosureButton.xInit = fish.position.x;
       enclosureButton.yInit = fish.position.y;
       fish.position.x = enclosureButton.x + enclosureButton.w/2;
-      fish.position.y = enclosureButton.y + enclosureButton.h/2;
+      fish.position.y = enclosureButton.y + enclosureButton.h/2 + 20; //translate downwards as spritesheet is not centered
       fish.hide = true;
     }
   }

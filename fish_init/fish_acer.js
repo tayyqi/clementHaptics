@@ -12,6 +12,7 @@ let currentPage = 0;
 let callNextPage = false;
 
 let luckyUrchin;
+let theta = 0;
 
 let seaweeds; //group
 let seaUrchins;//group
@@ -47,10 +48,9 @@ function preload() {
 }
 
 function setup() {
-  frameRate(500);
+  frameRate(80);
   // createCanvas(1024, 6/8*768);
   createCanvas(1536,864); //acer aspire14 aspect ratio
-  // frameRate(10);
   foodArr = new Group();
   gates = new Group();
   seaweeds = new Group();
@@ -75,6 +75,7 @@ function setup() {
   }
 
   // fish_swim.frameDelay = 10; //for bluefish
+  fish_swim.frameDelay = 2;
   fish = createSprite(width/2, height/2, 1000/2, 449);
   fish.addAnimation("swim", fish_swim);
   fish.setCollider('rectangle', -5,-15, 350,180);
@@ -147,15 +148,16 @@ function touchStarted () {
   }
 }
 
-// /* full screening will change the size of the canvas */
-// function windowResized() {
-//   resizeCanvas(windowWidth, windowHeight);
-//   // print(windowWidth, windowHeight)
-// }
+/* full screening will change the size of the canvas */
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  // print(windowWidth, windowHeight)
+}
 
 function draw() {
   background(0,0,50);
 
+  
   if(joystick.valX<0){
     fish.changeAnimation('swim');
     fish.mirrorX(1);
@@ -166,8 +168,10 @@ function draw() {
     fish.changeAnimation('swim');
   }
 
-  fish.position.x += joystick.valX;
-  fish.position.y += joystick.valY;
+  if(fish.hide == false){   //fish cannot move if within enclosure
+    fish.position.x += joystick.valX;
+    fish.position.y += joystick.valY;
+  }
 
   
   //set boundaries
@@ -237,13 +241,19 @@ function draw() {
     food.overlap(fish, eat);
   }
 
-  //lose points when touch sea urchin
-  // for(urchin of seaUrchins){
-  //   urchin.collide(fish, losepoint);
-  // }
-  fish.collide(seaUrchins, losepoint);
-  
-  fish.collide(octopus, losepoint);
+  //lose points when touch sea urchin or octopus
+  fish.collide(seaUrchins, spritesCollide);
+  fish.collide(octopus, spritesCollide);
+
+  if(fish.hide == false){
+    fish.collide(enclosures, spritesCollide)
+  }
+  if(currentPage == 3){
+    octopus.scale += sin(theta)*0.01;
+    theta +=0.03;
+  }else{
+    theta = 0;
+  }
 
 
   noStroke();
@@ -278,7 +288,7 @@ function eat(feed, fish) {
   }
 }
 
-function losepoint(fish, creature){
+function spritesCollide(fish, creature){
   if(creature.getAnimationLabel() == "urchin"){
     fish.score -= 2;
   } else if(creature.getAnimationLabel() == "octopus"){
