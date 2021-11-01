@@ -30,6 +30,7 @@ function createFeedCoral (x, y, w, h, text) {
 //minus points whn bump into sea Creature
 function createSeaCreature(x, y, w, h, name) {
   let seaCreatureButton = createButton(name, x, y, w, h);
+  seaCreatureButton.life = 10;
   seaCreatureButton.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
@@ -41,7 +42,12 @@ function createSeaCreature(x, y, w, h, name) {
     rounding: w/2,  //change for circle 
   });
   seaCreatureButton.onPress = function(){
-    fish.score++;
+    if(seaCreatureButton.label == "Octopus"){
+      fish.score+=10;
+      seaCreatureButton.life -= 1;
+    } else if(seaCreatureButton.label == "Sea Urchin"){
+      print("pressed")
+    }
   }
 
   // seaCreatureButton.onRelease = function(){
