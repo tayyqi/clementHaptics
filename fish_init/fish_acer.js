@@ -4,15 +4,19 @@ let fish;
 let fish_swim;
 let seaweed;  //animation
 let seaUrchin;  //animation
-let octopus;  //animation
-let enclosure;
+let octopus
+let octopus_ani;  //animation
+let enclosure; //animation
 let escaped = false;
 let currentPage = 0;
 let callNextPage = false;
 
+let luckyUrchin;
+
 let seaweeds; //group
 let seaUrchins;//group
-let gates;
+let enclosures; //group
+let gates;  //group
 let gateOpen = true;
 let pages = []; //collection of sprites in each page, including gates, seaweed, sea urchins and octopus
 let buttons = [];
@@ -27,14 +31,19 @@ function preload() {
     let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet.png", 7152/12, 4210/5, 53);  //white fish
     // let swimSpritesheet = loadSpriteSheet("assets/fish_Spritesheet2.png", 449, 1000, 4); //blue fish
     fish_swim = loadAnimation(swimSpritesheet);
+
     let seaweedSS = loadSpriteSheet("assets/seaweed.png", 199, 286, 1);
     seaweed = loadAnimation(seaweedSS);
+
     // let octopusSS = loadSpriteSheet("assets/octopus.png", 199, 286, 1);
-    // octopus = loadAnimation(octopusSS);
+    // octopus_ani = loadAnimation(octopusSS);
+    octopus_ani = loadAnimation(seaweedSS);
+
     let seaUrchSS = loadSpriteSheet("assets/seaUrchin.png", 274, 288, 1);
     seaUrchin = loadAnimation(seaUrchSS);
+
     let enclosureSS = loadSpriteSheet("assets/enclosure.png", 207, 216, 1);
-    enclosure = loadSpriteSheet(enclosureSS);
+    enclosure = loadAnimation(enclosureSS);
 }
 
 function setup() {
@@ -46,6 +55,7 @@ function setup() {
   gates = new Group();
   seaweeds = new Group();
   seaUrchins = new Group();
+  enclosures = new Group();
 
   //each page is a new group for sprites
   for(let i=0; i<5; i++){
@@ -74,7 +84,6 @@ function setup() {
   fish.hide = false;
     
   
-  point = 0;
   gui = createGui();
   
   //create page1 feeding ground
@@ -89,20 +98,24 @@ function setup() {
   // bottom row
   posX = 100;
   createSeaUrchins(2, posX, 800, 6, 7, 2, "BOTTOM");
+  luckyUrchin = int(random(0, seaUrchins.length));
+  print("luckyUrchin: " +luckyUrchin);
 
 
   //create page3 octopus, hiding
-  posX = width-600;
-  let octopus = createSeaCreature(posX + 3*width, height/2-200, 400, 0, "Octopus");
-  buttons[3].push(octopus);
-  for(let i=0; i<2; i++){1//top row
-    let enclosure = createEnclosure(200 + 3*width + i*400, 70+i*60, 150);
-    buttons[3].push(enclosure);
-  }
-  for(let i=0; i<2; i++){1//bottom row
-    let enclosure = createEnclosure(200 + 3*width + i*400, height -200-i*60, 150);
-    buttons[3].push(enclosure);
-  }
+  let pageNum = 3;
+  posX = width-600 + pageNum*width;
+  posY = height/2-200;
+  octopus = createSprite(posX+400/2, posY+400/2,400,400);
+  octopus.addAnimation("octopus", octopus_ani);
+  octopus.scale = 0.8;
+  octopus.setCollider("circle", 0,0, seaUrchInnerRad*0.8);
+  octopus.debug = true;
+  pages[pageNum].add(octopus);
+  let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
+  buttons[3].push(octopusButton);
+  createHideEnclosure(3, 200, 70, 1, 2);  //top row
+  createHideEnclosure(3, 200, height-200, -1, 2);  //bottom row
 
 
 
@@ -143,11 +156,6 @@ function touchStarted () {
 function draw() {
   background(0,0,50);
 
-  push();
-  fill(255);
-  text("curPage: " + currentPage, width/2, 100);
-  pop();
-
   if(joystick.valX<0){
     fish.changeAnimation('swim');
     fish.mirrorX(1);
@@ -181,12 +189,6 @@ function draw() {
     fish.overlap(gates, nextPage);
   }else{
     curGate.shapeColor = color(100,50);
-  }
-
-  let page1Buttons = buttons[1]
-  for(let i=0; i<page1Buttons.length; i++){
-    let button = page1Buttons[i];
-    // button.x -= 10;
   }
 
   if(callNextPage){
@@ -229,16 +231,31 @@ function draw() {
     gateOpen = false;
   }
 
-  //to account for which sprite is above
-  fish.overlap(foodArr, eat);
+  //food.overlap(fish) bcos fish is created before food
+  // foodArr.overlap(fish.eat)  //some prob wif using this syntax
   for(food of foodArr){
-    food.overlap(fish, eat)
+    food.overlap(fish, eat);
   }
+
+  //lose points when touch sea urchin
+  // for(urchin of seaUrchins){
+  //   urchin.collide(fish, losepoint);
+  // }
+  fish.collide(seaUrchins, losepoint);
+  
+  fish.collide(octopus, losepoint);
 
 
   noStroke();
   drawSprites();
   drawGui();
+
+  push();
+  fill(255);
+  textAlign(RIGHT);
+  text("curPage: " + currentPage, width - 100, 100);
+  text("Score: " + fish.score, width - 100, 150)
+  pop();
 
 }
 
@@ -252,13 +269,31 @@ function nextPage(fish, gate){
   print("nextpage");
 }
 
-function eat(fish, feed) {
+function eat(feed, fish) {
   feed.remove();
   fish.score++;
   print("point: " + fish.score);
-  if (fish.score > 10 && currentPage == 1){
+  if (fish.score > 20 && currentPage == 1){
     gateOpen = true;
   }
+}
+
+function losepoint(fish, creature){
+  if(creature.getAnimationLabel() == "urchin"){
+    fish.score -= 2;
+  } else if(creature.getAnimationLabel() == "octopus"){
+    fish.score -= 5;
+  }
+
+}
+
+function loseUrchin(fish, creature){
+  if(creature.getAnimationLabel() == "urchin"){
+    fish.score -= 2;
+  } else if(creature.getAnimationLabel() == "octopus"){
+    fish.score -= 5;
+  }
+
 }
 
 

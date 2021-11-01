@@ -47,12 +47,37 @@ function createSeaCreature(x, y, w, i, name) {
   });
   seaCreatureButton.onPress = function(){
     if(seaCreatureButton.name == "Octopus"){
-      fish.score+=10;
-      seaCreatureButton.life -= 1;
+      if(seaCreatureButton.life > 0){
+        fish.score += 10;
+        seaCreatureButton.life -= 1;
+        octopus.scale *=0.8;
+        //when octopus 0 lives
+        if(seaCreatureButton.life === 0){
+          //remove sprite
+          octopus.remove();
+          seaCreatureButton.setStyle({  //invisible button
+            fillBg: color(col,0),
+            fillBgHover: color(col,0),
+            fillBgActive: color(col,0),
+            strokeBg: color(col,0),  //nostroke
+            strokeBgHover: color(col,0),  //nostroke
+            strokeBgActive: color(col,0),  //nostroke
+          });
+          gateOpen = true;
+        }
+      }
     } else if(seaCreatureButton.name == "Sea Urchin"){
+      if (seaCreatureButton.index == luckyUrchin){
+        gateOpen = true;
+      }
       let sprite = seaUrchins[seaCreatureButton.index];
-      sprite.scale += 0.5;
-      sprite.debug = true;
+      if(sprite.scale > 3){
+        sprite.scale -= 2;
+      } else if(sprite.scale<0.5){
+        sprite.scale += 0.5;
+      } else{
+        sprite.scale += random(-0.5, 0.5);
+      }
     }
   }
 
@@ -68,8 +93,8 @@ function createSeaCreature(x, y, w, i, name) {
 function createEnclosure(x, y, w){
   let enclosureButton = createButton("", x, y, w, w);
   //store prev pos of fish
-  enclosureButton.xInit = 0;
-  enclosureButton.yInit = 0;
+  enclosureButton.xInit = width/2;
+  enclosureButton.yInit = height/2;
   //set style
   enclosureButton.setStyle({
     fillBg: color(col,30),
@@ -85,8 +110,8 @@ function createEnclosure(x, y, w){
     if(fish.hide){
       fish.position.x = enclosureButton.xInit;
       fish.position.y = enclosureButton.yInit;
-      enclosureButton.xInit = 0;
-      enclosureButton.yInit = 0;
+      enclosureButton.xInit = width/2;
+      enclosureButton.yInit = height/2;
       fish.hide = false;
     }  else{
       enclosureButton.xInit = fish.position.x;
