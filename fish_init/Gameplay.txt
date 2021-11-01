@@ -19,6 +19,7 @@ Colliding with sea urchin --> -2 points
 Page3: Octopus survival
 Survive the Octopus Attack
 Tap on the octopus button to kill the octopus. You can only do this when you are not hiding
-Hide in the enclosures to escape the tentacles
+Tap on the enclosures to hide and to escape the tentacles
+Tap on enclosures again to emerge from enclosure, rmber to tap on the same enclosure ,or transport to the middle of the screen
 Collision with octopus --> -10pts
 Each hit on the octopus --> +10pts
