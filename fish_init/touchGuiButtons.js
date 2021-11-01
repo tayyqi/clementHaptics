@@ -16,7 +16,7 @@ function createFeedCoral (x, y, w, h, text) {
   
   feedButton.onPress = function(){
     for(let i=0; i<random(5,10); i++){
-      let feed = createSprite(feedButton.x, feedButton.y,20,20);
+      let feed = createSprite(feedButton.x+w/2, feedButton.y+w/2,20,20);
       // feed.debug=true;
       feed.velocity.x = random(-7,7);
       feed.velocity.y = random(-7,7);

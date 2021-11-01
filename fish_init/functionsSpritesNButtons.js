@@ -29,9 +29,13 @@ function createSeaUrchins(pageNum, posX, posY, count, startCount, startWidthInde
 function createSeaweed(pageNum, posX, posY, count){
     posX += pageNum*width;
     for(let i=0; i<count; i++){
-        let seaweedSprite = createSprite(posX + 50, posY, 150,150);
-        seaweedSprite.addAnimation("still", seaweed);
-        seaweedSprite.scale = 0.8;
+        let seaweedSprite = createSprite(posX + 75, posY+75, 150,150);
+        let index = int(random(1,4));
+        let index2 = (index + int(random(1,3)))%4 + 1;
+        let anim = loadAnimation('assets/seaweed_00'+ index +'.png', 'assets/seaweed_00'+ index2 +'.png');
+        anim.frameDelay = int(random(18,23));
+        seaweedSprite.addAnimation("seaweed", anim);
+        seaweedSprite.scale = 0.5;
         pages[pageNum].add(seaweedSprite);
         seaweeds.add(seaweedSprite);
         let feedButton = createFeedCoral(posX, posY, 150,150, "Seaweed");

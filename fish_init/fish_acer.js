@@ -3,6 +3,11 @@ colorarray = ['#b04119','yellow','blue'];
 let fish;
 let fish_swim;
 let seaweed;  //animation
+let seaweedFiles = ['assets/seaweed_001.png',
+                    'assets/seaweed_002.png',
+                    'assets/seaweed_003.png',
+                    'assets/seaweed_004.png']
+let seaweedFrames = [];
 let seaUrchin;  //animation
 let octopus
 let octopus_ani;  //animation
@@ -35,6 +40,12 @@ function preload() {
 
     let seaweedSS = loadSpriteSheet("assets/seaweed.png", 199, 286, 1);
     seaweed = loadAnimation(seaweedSS);
+
+    for(let i=0; i<seaweedFiles.length; i++){
+      let file = seaweedFiles[i];
+      seaweedFrames.push(loadImage(file));
+    }
+    
 
     // let octopusSS = loadSpriteSheet("assets/octopus.png", 199, 286, 1);
     // octopus_ani = loadAnimation(octopusSS);
