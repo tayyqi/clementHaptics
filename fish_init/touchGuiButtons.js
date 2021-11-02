@@ -92,9 +92,6 @@ function createSeaCreature(x, y, w, i, name) {
 //create enclosure button
 function createEnclosure(x, y, w){
   let enclosureButton = createButton("", x, y, w, w);
-  //store prev pos of fish
-  enclosureButton.xInit = width/2;
-  enclosureButton.yInit = height/2;
   //set style
   enclosureButton.setStyle({
     fillBg: color(col,30),
@@ -108,14 +105,8 @@ function createEnclosure(x, y, w){
   });
   enclosureButton.onPress = function(){
     if(fish.hide){
-      fish.position.x = enclosureButton.xInit;
-      fish.position.y = enclosureButton.yInit;
-      enclosureButton.xInit = width/2;
-      enclosureButton.yInit = height/2;
       fish.hide = false;
     }  else{
-      enclosureButton.xInit = fish.position.x;
-      enclosureButton.yInit = fish.position.y;
       fish.position.x = enclosureButton.x + enclosureButton.w/2;
       fish.position.y = enclosureButton.y + enclosureButton.h/2 + 20; //translate downwards as spritesheet is not centered
       fish.hide = true;

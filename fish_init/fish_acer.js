@@ -109,11 +109,12 @@ function setup() {
   let pageNum = 3;
   posX = width-600 + pageNum*width;
   posY = height/2-200;
+  // octopus = createSprite(posX+400/2, posY+400/2,400,400);
   octopus = createSprite(posX+400/2, posY+400/2,400,400);
   octopus.start = false;
   octopus.addAnimation("octopus", octopus_ani);
-  octopus.scale = 1;
-  octopus.setCollider("circle", 0,0, 200);
+  octopus.setCollider("rectangle", 0,0, 320,220);
+  octopus.scale = 1.6;
   octopus.debug = true;
   pages[pageNum].add(octopus);
   let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
@@ -179,30 +180,30 @@ function draw() {
   }
   
 
-  if(currentPage<4){
-    if(joystick.valX<0){
-      fish.changeAnimation('swim');
-      fish.mirrorX(1);
-    } else if(joystick.valX>0) {
-      fish.changeAnimation('swim');
-      fish.mirrorX(-1);
-    }else{
-      fish.changeAnimation('swim');
-    }
-
-    if(fish.hide == false){   //fish cannot move if within enclosure
-      fish.position.x += joystick.valX;
-      fish.position.y += joystick.valY;
-    }
-
-    
-    //set boundaries
-    if(fish.position.x < 50){
-      fish.position.x = 50;
-    }else if(fish.position.x > width - 50) {
-      fish.position.x = width - 50;
-    }
+  
+  if(joystick.valX<0){
+    fish.changeAnimation('swim');
+    fish.mirrorX(1);
+  } else if(joystick.valX>0) {
+    fish.changeAnimation('swim');
+    fish.mirrorX(-1);
+  }else{
+    fish.changeAnimation('swim');
   }
+
+  if(fish.hide == false){   //fish cannot move if within enclosure
+    fish.position.x += joystick.valX;
+    fish.position.y += joystick.valY;
+  }
+
+  
+  //set boundaries
+  if(fish.position.x < 50){
+    fish.position.x = 50;
+  }else if(fish.position.x > width - 50) {
+    fish.position.x = width - 50;
+  }
+  
 
   if(fish.position.y < 50){
     fish.position.y = 50;
@@ -253,21 +254,14 @@ function draw() {
     //reset fish to left most
     if(currentPage == 4){
       fish.position.x = width/2;
-      fish.position.y = height/2;
-      push();
-      textAlign(CENTER);
-      textSize(60);
-      fill(255);
-      text("THE END", width/2, height/2);
-      pop();
-      
+      fish.position.y = height/2;   
     } else{
       fish.position.x = 30;
       fish.position.y = height/2;
+      gateOpen = false;
     }
 
     callNextPage = false;
-    gateOpen = false;
   }
 
   //food.overlap(fish) bcos fish is created before food
@@ -286,9 +280,9 @@ function draw() {
   }
   if(currentPage == 3){
     if(octopus.start){
-      if(octopus.position.x < octopus.scale*200 || octopus.position.x > width-octopus.scale*200){
+      if(octopus.position.x < octopus.scale*100 || octopus.position.x > width-octopus.scale*100){
         octopus.velocity.x *= -1;
-      } else if(octopus.position.y < octopus.scale*200 || octopus.position.y > height-octopus.scale*200){
+      } else if(octopus.position.y < octopus.scale*100 || octopus.position.y > height-octopus.scale*100){
         octopus.velocity.y *= -1;
       }
     }else{
@@ -308,8 +302,6 @@ function draw() {
     // }
     // octopus.scale += sin(theta)*0.01;
     // theta +=0.03;
-  }else{
-    theta = 0;
   }
 
   // if(currentPage == 2){
@@ -321,6 +313,59 @@ function draw() {
   //   theta =0;
   // }
 
+  //set text on page
+  textAlign(CENTER);
+  textFont('Helvetica');
+  if(currentPage == 0){
+    push();
+    
+    textSize(60);
+    fill(255);
+    text("WELCOME!", width/2, height/4);
+    textSize(30);
+    let subtext = "";
+    if(fullscreen()){
+      subtext = "Head over to the blue gate to start your adventure";
+    }else{
+      subtext = "Tap on the screen for fullscreen";
+    }
+    text(subtext, width/2, height*3/4);
+    pop();
+  } else if(currentPage == 1){
+    push();
+    textSize(20);
+    fill(255, 80);
+    text("Tap on the seaweed to feed the fish!", width/2, height/2);
+    text("Gate opens when the fish is full", width/2, height/2 + 25);
+    pop();
+  } else if(currentPage == 2){
+    push();
+    textSize(20);
+    fill(255, 80);
+    text("Find the lucky urchin to open the gate", width/2, height/2);
+    text("Be careful of bumping into the urchins! (-2pts)", width/2, height/2 + 25);
+    pop();
+  } else if(currentPage == 3){
+    push();
+    textSize(20);
+    fill(255, 80);
+    text("Survive the octopus attack!", width/2, height/2-25);
+    text("Tap on the Octopus button to eradicate it. You can only do so when not hiding", width/2, height/2);
+    text("Tap on enclosures to hide, Tap again to escape enclosure", width/2, height/2 + 25);
+    pop();
+  }
+  else if(currentPage == 4){
+    push();
+    textSize(60);
+    fill(255);
+    text("THE END", width/2, height/4);
+    textSize(30);
+    text("SCORE: " + fish.score, width/2, height/4+65);
+    textSize(40);
+    text("Head over to the gate to restart the story", width/2, height*3/4);
+    pop();
+}
+
 
   noStroke();
   drawSprites();
@@ -329,15 +374,26 @@ function draw() {
   push();
   fill(255);
   textAlign(RIGHT);
-  text("curPage: " + currentPage, width - 100, 100);
-  text("Score: " + fish.score, width - 100, 150)
+  textSize(20);
+  if(currentPage != 4){
+    text("Page: " + currentPage, width - 100, 100);
+    text("Score: " + fish.score, width - 100, 150);
+  }
   pop();
 
 }
 
 function nextPage(fish, gate){
   currentPage += 1;
-  gateOpen = false;
+  if(currentPage > 4){
+    currentPage = 0;
+    window.location.reload(); //refresh page
+  }
+  if(currentPage == 0 || currentPage == 4){
+    gateOpen = true;
+  } else{
+    gateOpen = false;
+  }
   callNextPage = true;
   console.log("nextpage " + currentPage);
 }
