@@ -15,7 +15,7 @@ function createSeaUrchins(pageNum, posX, posY, count, startCount, startWidthInde
         urchinSprite.index = startCount + i;   //used to identify sprite to button press
         urchinSprite.setCollider("circle", 0,0, seaUrchInnerRad*0.8);
         urchinSprite.immovable = true;
-        urchinSprite.debug = true;
+        // urchinSprite.debug = true;
         pages[pageNum].add(urchinSprite);
         seaUrchins.add(urchinSprite);
         let seaUrchinButton = createSeaCreature(posX, posY, w, startCount+i, "Sea Urchin");
@@ -54,7 +54,7 @@ function createHideEnclosure(pageNum, posX, posY, yDrxn, count){
         hideSprite.addAnimation("still", enclosure);
         hideSprite.scale = 1;
         hideSprite.setCollider("circle", 0,0, 120);
-        hideSprite.debug = true;
+        // hideSprite.debug = true;
         pages[pageNum].add(hideSprite);
         enclosures.add(hideSprite);
         let enclosureButton = createEnclosure(posX + i*400, posY + yDrxn*i*60, 150);

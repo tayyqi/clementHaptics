@@ -82,7 +82,7 @@ function setup() {
   fish = createSprite(width/2, height/2, 1000/2, 449);
   fish.addAnimation("swim", fish_swim);
   fish.setCollider('rectangle', -5,-15, 350,180);
-  fish.debug = true;
+  // fish.debug = true;
   fish.scale = 0.5;
   fish.score = 0;
   fish.hide = false;
@@ -180,28 +180,29 @@ function draw() {
   }
   
 
-  
-  if(joystick.valX<0){
-    fish.changeAnimation('swim');
-    fish.mirrorX(1);
-  } else if(joystick.valX>0) {
-    fish.changeAnimation('swim');
-    fish.mirrorX(-1);
-  }else{
-    fish.changeAnimation('swim');
-  }
+  if(currentPage<4){
+    if(joystick.valX<0){
+      fish.changeAnimation('swim');
+      fish.mirrorX(1);
+    } else if(joystick.valX>0) {
+      fish.changeAnimation('swim');
+      fish.mirrorX(-1);
+    }else{
+      fish.changeAnimation('swim');
+    }
 
-  if(fish.hide == false){   //fish cannot move if within enclosure
-    fish.position.x += joystick.valX;
-    fish.position.y += joystick.valY;
-  }
+    if(fish.hide == false){   //fish cannot move if within enclosure
+      fish.position.x += joystick.valX;
+      fish.position.y += joystick.valY;
+    }
 
-  
-  //set boundaries
-  if(fish.position.x < 100){
-    fish.position.x = 100;
-  }else if(fish.position.x > width - 100) {
-    fish.position.x = width - 100;
+    
+    //set boundaries
+    if(fish.position.x < 50){
+      fish.position.x = 50;
+    }else if(fish.position.x > width - 50) {
+      fish.position.x = width - 50;
+    }
   }
 
   if(fish.position.y < 50){
@@ -251,8 +252,20 @@ function draw() {
     }
 
     //reset fish to left most
-    fish.position.x = 30;
-    fish.position.y = height/2;
+    if(currentPage == 4){
+      fish.position.x = width/2;
+      fish.position.y = height/2;
+      push();
+      textAlign(CENTER);
+      textSize(60);
+      fill(255);
+      text("THE END", width/2, height/2);
+      pop();
+      
+    } else{
+      fish.position.x = 30;
+      fish.position.y = height/2;
+    }
 
     callNextPage = false;
     gateOpen = false;
@@ -299,6 +312,15 @@ function draw() {
   }else{
     theta = 0;
   }
+
+  // if(currentPage == 2){
+  //   for(urchin of seaUrchin){
+  //     urchin.scale += sin(theta)*0.01;
+  //     theta += 0.03
+  //   }
+  // }else{
+  //   theta =0;
+  // }
 
 
   noStroke();
