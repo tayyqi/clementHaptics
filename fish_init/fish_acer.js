@@ -36,9 +36,8 @@ function preload() {
     let seaweedSS = loadSpriteSheet("assets/seaweed.png", 199, 286, 1);
     seaweed = loadAnimation(seaweedSS);
 
-    // let octopusSS = loadSpriteSheet("assets/octopus.png", 199, 286, 1);
-    // octopus_ani = loadAnimation(octopusSS);
-    octopus_ani = loadAnimation(seaweedSS);
+    let octopusSS = loadSpriteSheet("assets/octopus.png", 4576/12, 1355/5, 56);
+    octopus_ani = loadAnimation(octopusSS);
 
     let seaUrchSS = loadSpriteSheet("assets/seaUrchin.png", 274, 288, 1);
     seaUrchin = loadAnimation(seaUrchSS);
