@@ -358,7 +358,7 @@ function draw() {
     text("Tap on enclosures to hide, Tap again to escape enclosure", 50, height/2 + 25);
     if(octopus.pause){
       textSize(25);
-      text("Tap on one of the enclosures to hide and start surviving", 50, height/2 + 50);
+      text("Tap on one of the enclosures to hide and start surviving", 50, height/2 + 55);
     }
     pop();
   }
