@@ -5,6 +5,7 @@ let fish_swim;
 let seaweed;  //animation
 let seaUrchin;  //animation
 let octopus;
+let octopus_pause; //animation
 let octopus_ani;  //animation
 let enclosure; //animation
 let escaped = false;
@@ -38,6 +39,8 @@ function preload() {
 
     let octopusSS = loadSpriteSheet("assets/octopus.png", 4576/12, 1355/5, 56);
     octopus_ani = loadAnimation(octopusSS);
+    octopus_pause = octopus_ani;
+    octopus_pause.frameDelay = 5;
 
     let seaUrchSS = loadSpriteSheet("assets/seaUrchin.png", 274, 288, 1);
     seaUrchin = loadAnimation(seaUrchSS);
@@ -109,13 +112,14 @@ function setup() {
   let pageNum = 3;
   posX = width-600 + pageNum*width;
   posY = height/2-200;
-  // octopus = createSprite(posX+400/2, posY+400/2,400,400);
   octopus = createSprite(posX+400/2, posY+400/2,400,400);
   octopus.start = false;
+  octopus.pause = true;
+  octopus.addAnimation("pause", octopus_pause);
   octopus.addAnimation("octopus", octopus_ani);
   octopus.setCollider("rectangle", 0,0, 320,220);
   octopus.scale = 1.6;
-  octopus.debug = true;
+  // octopus.debug = true;
   pages[pageNum].add(octopus);
   let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
   buttons[3].push(octopusButton);
@@ -286,22 +290,21 @@ function draw() {
         octopus.velocity.y *= -1;
       }
     }else{
-      octopus.velocity.x = -10;
-      octopus.velocity.y = 5;
-      octopus.start = true;
+      if(octopus.pause){  //set octopus to only move when started ie enclosure first pressed
+        print("octo pause")
+        octopus.changeAnimation("pause");
+        if(fish.hide){
+          octopus.pause = false;
+        }
+      } else{
+        octopus.changeAnimation("octopus");
+        octopus.velocity.x = -10;
+        octopus.velocity.y = 5;
+        octopus.start = true;
+      }
+
     }
- 
-    // if(octopus.position.x < 400){
-    //   octopus.position.x = 400;
-    // } else if(octopus.position.x > width-400){
-    //   octopus.position.x = width-40;
-    // } else if(octopus.position.y < 400){
-    //   octopus.position.y = 200;
-    // } else if(octopus.position.y > height-400){
-    //   octopus.position.y = height-400;
-    // }
-    // octopus.scale += sin(theta)*0.01;
-    // theta +=0.03;
+
   }
 
   // if(currentPage == 2){
@@ -347,11 +350,16 @@ function draw() {
     pop();
   } else if(currentPage == 3){
     push();
+    textAlign(LEFT);
     textSize(20);
     fill(255, 80);
-    text("Survive the octopus attack!", width/2, height/2-25);
-    text("Tap on the Octopus button to eradicate it. You can only do so when not hiding", width/2, height/2);
-    text("Tap on enclosures to hide, Tap again to escape enclosure", width/2, height/2 + 25);
+    text("Survive the octopus attack!", 50, height/2-25);
+    text("Tap on the Octopus button to eradicate it. You can only do so when not hiding", 50, height/2);
+    text("Tap on enclosures to hide, Tap again to escape enclosure", 50, height/2 + 25);
+    if(octopus.pause){
+      textSize(25);
+      text("Tap on one of the enclosures to hide and start surviving", 50, height/2 + 50);
+    }
     pop();
   }
   else if(currentPage == 4){

@@ -117,10 +117,5 @@ function createEnclosure(x, y, w){
     fish.peek = false;
   }
 
-  function eat(fish, feed){
-    feed.remove();
-    // point +=1;
-  }
-
   return enclosureButton;
 }
