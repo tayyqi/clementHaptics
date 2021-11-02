@@ -4,12 +4,12 @@ function createFeedCoral (x, y, w, h, text) {
   let feedButton = createButton("", x, y, w, h);  //("", 220, 130, 100, 100)
   feedButton.name = text;
   feedButton.setStyle({
-      fillBg: color(col,30),
-      fillBgHover: color(col,30),
-      fillBgActive: color(col,80),
-      strokeBg: color(col,50),  //nostroke
-      strokeBgHover: color(col,50),  //nostroke
-      strokeBgActive: color(col,80),  //nostroke
+      fillBg: color(0,0,colB,30),
+      fillBgHover: color(0,0,colB,30),
+      fillBgActive: color(0,0,colB,80),
+      strokeBg: color(0,0,colB,50),  //nostroke
+      strokeBgHover: color(0,0,colB,50),  //nostroke
+      strokeBgActive: color(0,0,colB,80),  //nostroke
       // strokeWeight: 10,
       rounding: w/2,  //change for circle
   });
@@ -30,17 +30,18 @@ function createFeedCoral (x, y, w, h, text) {
 // create sea creature
 // sea Creature bubbles when touched -- get points?
 //minus points whn bump into sea Creature
+let col = 255;
 function createSeaCreature(x, y, w, i, name) {
   let seaCreatureButton = createButton("", x, y, w, w);
   seaCreatureButton.name = name;
   seaCreatureButton.life = 10;
   seaCreatureButton.index = i;
   seaCreatureButton.setStyle({
-    fillBg: color(col,30),
-    fillBgHover: color(col,30),
+    fillBg: color(col,50),
+    fillBgHover: color(col,50),
     fillBgActive: color(col,80),
     strokeBg: color(col,50),  //nostroke
-    strokeBgHover: color(col,50),  //nostroke
+    strokeBgHover: color(col,60),  //nostroke
     strokeBgActive: color(col,80),  //nostroke
     // strokeWeight: 10,
     rounding: w/2,  //change for circle 

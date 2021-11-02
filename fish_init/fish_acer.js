@@ -26,7 +26,7 @@ let buttons = [];
 
 let gui;
 let joystick;
-let col = 255;  //base col button white
+let colB = 50;  //base col button navy blue
 
 var foodArr;
 
@@ -49,7 +49,7 @@ function preload() {
     let enclosureSS = loadSpriteSheet("assets/enclosure.png", 207, 216, 1);
     enclosure = loadAnimation(enclosureSS);
 
-    bg = loadImage('assets/background.jpg');
+    bg = loadImage('assets/background2.jpg');
 }
 
 // an array to add multiple particles
@@ -122,7 +122,7 @@ function setup() {
   octopus.addAnimation("octopus", octopus_ani);
   octopus.setCollider("rectangle", 0,0, 320,220);
   octopus.scale = 1.6;
-  // octopus.debug = true;
+  octopus.debug = true;
   pages[pageNum].add(octopus);
   let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
   buttons[3].push(octopusButton);
