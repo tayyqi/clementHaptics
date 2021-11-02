@@ -12,6 +12,7 @@ let escaped = false;
 let currentPage = 0;
 let callNextPage = false;
 
+let bg;
 let luckyUrchin;
 let theta = 0;
 
@@ -37,16 +38,18 @@ function preload() {
     let seaweedSS = loadSpriteSheet("assets/seaweed.png", 199, 286, 1);
     seaweed = loadAnimation(seaweedSS);
 
-    let octopusSS = loadSpriteSheet("assets/octopus.png", 4576/12, 1355/5, 56);
+    let octopusSS = loadSpriteSheet("assets/octopus.png", 4584/12, 542/2, 19);
     octopus_ani = loadAnimation(octopusSS);
     octopus_pause = octopus_ani;
-    octopus_pause.frameDelay = 5;
+    octopus_pause.frameDelay = 10;
 
     let seaUrchSS = loadSpriteSheet("assets/seaUrchin.png", 274, 288, 1);
     seaUrchin = loadAnimation(seaUrchSS);
 
     let enclosureSS = loadSpriteSheet("assets/enclosure.png", 207, 216, 1);
     enclosure = loadAnimation(enclosureSS);
+
+    bg = loadImage('assets/background.jpg');
 }
 
 // an array to add multiple particles
@@ -133,7 +136,7 @@ function setup() {
   // for the x and y axes; minX, maxX, minY, maxY
   // The default min and max values for all four are -1 and 1.
   let maxDisp = 10;
-  joystick = createJoystick("Joystick", width*6.5/8, height*2.8/4, 175, 175, -maxDisp, maxDisp, maxDisp, -maxDisp);
+  joystick = createJoystick("Joystick", width*6.75/8, height*3.05/4, 80, 80, -maxDisp, maxDisp, maxDisp, -maxDisp);
   joystick.setStyle({
     fillBg: color(col,30),
     fillBgHover: color(col,30),
@@ -167,7 +170,8 @@ function windowResized() {
 }
 
 function draw() {
-  background(0,0,50);
+  // background(0,0,50);
+background(bg)
 
   //show particles as bg
   for(let i = 0;i<particles.length;i++) {
@@ -376,8 +380,9 @@ function draw() {
 
 
   noStroke();
-  drawSprites();
+  
   drawGui();
+  drawSprites();
 
   push();
   fill(255);
