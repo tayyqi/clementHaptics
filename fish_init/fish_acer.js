@@ -122,7 +122,7 @@ function setup() {
   octopus.addAnimation("octopus", octopus_ani);
   octopus.setCollider("rectangle", 0,0, 320,220);
   octopus.scale = 1.6;
-  octopus.debug = true;
+  // octopus.debug = true;
   pages[pageNum].add(octopus);
   let octopusButton = createSeaCreature(posX, posY, 400, 0, "Octopus");
   buttons[3].push(octopusButton);
