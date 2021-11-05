@@ -99,3 +99,8 @@ canvas {
 @media (min-height: 800px) {
 	.container { transform: scale(1); }
 }
+
+/* disable zoom func when double tap */
+.disable-dbl-tap-zoom {
+	touch-action: manipulation;
+  }
