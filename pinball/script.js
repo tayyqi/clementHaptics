@@ -317,13 +317,13 @@
 			.on('mouseup touchend', function(e) {
 				isRightPaddleUp = false;
 			});
-		$('.launch-trigger')
-		.on('mousedown touchstart', function(e) {
-				isRightPaddleUp = true;
-			})
-			.on('mouseup touchend', function(e) {
-				isRightPaddleUp = false;
-			});
+		// $('.launch-trigger')
+		// .on('mousedown touchstart', function(e) {
+		// 		isRightPaddleUp = true;
+		// 	})
+		// 	.on('mouseup touchend', function(e) {
+		// 		isRightPaddleUp = false;
+		// 	});
 	}
 
 	function launchPinball() {
@@ -456,3 +456,9 @@
 
 	window.addEventListener('load', load, false);
 })();
+
+
+function touchMoved() {
+	// do some stuff
+	return false;
+  }
