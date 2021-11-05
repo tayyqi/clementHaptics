@@ -458,7 +458,8 @@
 })();
 
 
-function touchMoved() {
-	// do some stuff
+function touchStarted() {
+	event.preventDefault();
+
 	return false;
   }
