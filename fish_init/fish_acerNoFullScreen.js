@@ -331,11 +331,11 @@ background(bg)
     text("WELCOME!", width/2, height/4);
     textSize(30);
     let subtext = "";
-    if(fullscreen()){
-      subtext = "Head over to the blue gate to start your adventure";
-    }else{
+    // if(fullscreen()){
+    //   subtext = "Head over to the blue gate to start your adventure";
+    // }else{
       subtext = "Tap on the screen for fullscreen";
-    }
+    // }
     text(subtext, width/2, height*3/4);
     pop();
   } else if(currentPage == 1){
