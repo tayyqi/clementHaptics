@@ -332,9 +332,9 @@ background(bg)
     textSize(30);
     let subtext = "";
     // if(fullscreen()){
-    //   subtext = "Head over to the blue gate to start your adventure";
+      subtext = "Head over to the blue gate to start your adventure";
     // }else{
-      subtext = "Tap on the screen for fullscreen";
+    //   subtext = "Tap on the screen for fullscreen";
     // }
     text(subtext, width/2, height*3/4);
     pop();
