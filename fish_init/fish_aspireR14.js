@@ -156,12 +156,12 @@ function setup() {
 
 
 //fullscreen - doesnt work on ios...
-function touchStarted () {
-  var fs = fullscreen();
-  if (!fs) {
-    fullscreen(true);
-  }
-}
+// function touchStarted () {
+//   var fs = fullscreen();
+//   if (!fs) {
+//     fullscreen(true);
+//   }
+// }
 
 /* full screening will change the size of the canvas */
 function windowResized() {
